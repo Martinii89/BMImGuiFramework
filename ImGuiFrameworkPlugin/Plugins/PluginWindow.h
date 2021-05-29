@@ -15,7 +15,7 @@ namespace imgui_framework::plugins
 		// Interface info
 		[[nodiscard]] virtual int InterfaceVersion() const noexcept = 0;
 		[[nodiscard]] virtual std::string GetRendererVersion() const noexcept = 0;
-		
+
 		// Getters
 		[[nodiscard]] virtual std::string GetWindowName() const noexcept = 0;
 		[[nodiscard]] virtual bool GetIsOpen() const noexcept = 0;

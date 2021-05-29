@@ -42,7 +42,7 @@ void DxHook::Hook()
 {
 	PresentHook = [this](auto swap_chain) { OnPresent(swap_chain); };
 	MyWndProcHandler = [this](HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) { return OnWndProc(hWnd, uMsg, wParam, lParam); };
-	if (kiero::init(kiero::RenderType::D3D11) == kiero::Status::Success)
+	if (init(kiero::RenderType::D3D11) == kiero::Status::Success)
 	{
 		LOG("Binding hkPresent");
 		kiero::bind(8, (void**)&oPresent, hkPresent);
@@ -114,7 +114,7 @@ bool DxHook::RendererAvailable(const std::string& render_id) const
 }
 
 
-bool DxHook::AddWindow(const std::shared_ptr<imgui_framework::plugins::PluginWindow>& window)
+bool DxHook::AddWindow(const std::shared_ptr<plugins::PluginWindow>& window)
 {
 	LOG("DxHook::AddWindow");
 	auto* renderer = GetRenderer(window->GetRendererVersion());
@@ -132,7 +132,7 @@ bool DxHook::AddWindow(const std::shared_ptr<imgui_framework::plugins::PluginWin
 	return true;
 }
 
-bool DxHook::RemoveWindow(const std::shared_ptr<imgui_framework::plugins::PluginWindow>& window)
+bool DxHook::RemoveWindow(const std::shared_ptr<plugins::PluginWindow>& window)
 {
 	auto* renderer = GetRenderer(window->GetRendererVersion());
 	if (!renderer)
