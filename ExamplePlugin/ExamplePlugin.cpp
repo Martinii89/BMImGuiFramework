@@ -6,6 +6,8 @@
 #include <delayimp.h>
 
 
+//Additional linker flags required for delayed dll loading
+// /DELAYLOAD:ImGuiFrameworkPlugin.dll /DELAY:UNLOAD 
 #pragma comment(lib, "ImGuiFrameworkPlugin.lib")
 #pragma comment(lib, "delayimp")
 

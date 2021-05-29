@@ -11,7 +11,7 @@ namespace imgui_framework
 }
 
 
-BAKKESMOD_PLUGIN(ImGuiFrameworkPlugin, "write a plugin description here", imgui_framework::plugin_version, PLUGINTYPE_THREADED | PLUGINTYPE_THREADEDUNLOAD)
+BAKKESMOD_PLUGIN(ImGuiFrameworkPlugin, "Multi-version ImguiFramework for bakkesmod", imgui_framework::plugin_version, PLUGINTYPE_THREADED | PLUGINTYPE_THREADEDUNLOAD)
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
