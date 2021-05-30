@@ -15,6 +15,14 @@ public:
 	void Close() override;
 
 	void SetImGuiContext(ImGuiContext* ctx) override;
-private:
+protected:
 	bool open_ = true;
+};
+
+
+class DemoWindow : public TestWindow
+{
+public:
+	[[nodiscard]] std::string GetWindowName() const noexcept override;
+	void Render() override;
 };

@@ -59,7 +59,8 @@ void ExamplePlugin::InitHost()
 	if (host_wrapper_ && host_wrapper_->HostIsValid())
 	{
 		addon_window_ = std::make_shared<TestWindow>();
-		if (host_wrapper_->AddWindow(addon_window_))
+		demo_window = std::make_shared<DemoWindow>();
+		if (host_wrapper_->AddWindow(addon_window_) && host_wrapper_->AddWindow(demo_window))
 		{
 			LOG("Added window");
 		}

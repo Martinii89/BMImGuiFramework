@@ -31,13 +31,10 @@ bool TestWindow::GetIsActiveOverlay() const noexcept
 
 void TestWindow::Render()
 {
-	if (!open_) return;
-
 	ImGui::Begin("Addon window", &open_);
 	ImGui::Text("Just a addon window");
 	ImGui::End();
-
-	ImGui::ShowDemoWindow();
+	
 }
 
 void TestWindow::Open()
@@ -55,4 +52,14 @@ void TestWindow::Close()
 void TestWindow::SetImGuiContext(ImGuiContext* ctx)
 {
 	ImGui::SetCurrentContext(ctx);
+}
+
+std::string DemoWindow::GetWindowName() const noexcept
+{
+	return "DemoWindow";
+}
+
+void DemoWindow::Render()
+{
+	ImGui::ShowDemoWindow(&open_);
 }
