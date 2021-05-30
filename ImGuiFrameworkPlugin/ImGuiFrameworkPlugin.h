@@ -33,9 +33,6 @@ private:
 	void onLoad() override;
 	void onUnload() override;
 
-	void InitKiero();
-	BakkesMod::Plugin::LoadedPlugin* GetLoadedPlugin(BakkesModPlugin* plugin) const;
-
 	// Using pimple here so users of this header don't have to deal with the internals. 
 	// http://oliora.github.io/2015/12/29/pimpl-and-rule-of-zero.html
 	[[nodiscard]] const imgui_framework::Impl* Pimpl() const { return pImpl.get(); }
