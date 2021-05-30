@@ -152,7 +152,7 @@ bool DxHook::RemoveWindow(const std::shared_ptr<plugins::PluginWindow>& window)
 imgui_framework::rendering::Renderer* DxHook::GetRenderer(const std::string& render_id) const
 {
 	LOG("Fetching the renderer for {}", render_id);
-	auto render_iterator = std::find_if(
+	const auto render_iterator = std::find_if(
 		unitialized_renderers_.begin(),
 		unitialized_renderers_.end(),
 		[render_id](auto& renderer)
@@ -161,7 +161,7 @@ imgui_framework::rendering::Renderer* DxHook::GetRenderer(const std::string& ren
 		});
 	if (render_iterator != unitialized_renderers_.end()) return &*render_iterator->get();
 
-	auto initialized_render_iterator = std::find_if(
+	const auto initialized_render_iterator = std::find_if(
 		initialized_renderers_.begin(),
 		initialized_renderers_.end(),
 		[render_id](auto& renderer)

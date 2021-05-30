@@ -42,11 +42,13 @@ void TestWindow::Render()
 
 void TestWindow::Open()
 {
+	LOG("{}", __FUNCTION__);
 	open_ = true;
 }
 
 void TestWindow::Close()
 {
+	LOG("{}", __FUNCTION__);
 	open_ = false;
 }
 

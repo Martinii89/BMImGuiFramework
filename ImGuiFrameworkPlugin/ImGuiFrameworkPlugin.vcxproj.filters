@@ -90,6 +90,9 @@
     <ClCompile Include="Renderers\DefaultRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="details\WindowManagerGUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGuiFrameworkPlugin.h">
@@ -174,6 +177,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Renderers\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="details\WindowManagerGUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

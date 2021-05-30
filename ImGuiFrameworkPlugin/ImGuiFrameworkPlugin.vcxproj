@@ -94,6 +94,7 @@
     <ClCompile Include="details\DxHook.cpp" />
     <ClCompile Include="details\FrameworkImpl.cpp" />
     <ClCompile Include="details\WindowManager.cpp" />
+    <ClCompile Include="details\WindowManagerGUI.cpp" />
     <ClCompile Include="fmt\src\format.cc" />
     <ClCompile Include="fmt\src\os.cc" />
     <ClCompile Include="IMGUI\imgui.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="details\DxHook.h" />
     <ClInclude Include="details\FrameworkImpl.h" />
     <ClInclude Include="details\WindowManager.h" />
+    <ClInclude Include="details\WindowManagerGUI.h" />
     <ClInclude Include="IMGUI\imconfig.h" />
     <ClInclude Include="IMGUI\imgui.h" />
     <ClInclude Include="IMGUI\imgui_impl_dx11.h" />

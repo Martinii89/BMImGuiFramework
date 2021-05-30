@@ -14,7 +14,7 @@ BAKKESMOD_PLUGIN(ImGuiFrameworkPlugin, "Multi-version ImguiFramework for bakkesm
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
-ImGuiFrameworkPlugin::ImGuiFrameworkPlugin(): pImpl(new imgui_framework::Impl(this), [](imgui_framework::Impl* impl) { delete impl; }) { }
+ImGuiFrameworkPlugin::ImGuiFrameworkPlugin(): pImpl(new imgui_framework::Impl(), [](imgui_framework::Impl* impl) { delete impl; }) { }
 
 void ImGuiFrameworkPlugin::onLoad()
 {

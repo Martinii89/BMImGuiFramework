@@ -1,25 +1,25 @@
 ﻿#pragma once
 
+#include "WindowManagerGUI.h"
 #include "Plugins/PluginHostWrapper.h"
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 
 namespace imgui_framework::details
 {
-	struct LoadedWindow
-	{
-		std::string name;
-		std::string backend;
-		BakkesMod::Plugin::LoadedPlugin* owner;
-		plugins::PluginWindowPtr window;
-	};
+	//struct LoadedWindow
+	//{
+	//	std::string name;
+	//	std::string backend;
+	//	BakkesMod::Plugin::LoadedPlugin* owner;
+	//	plugins::PluginWindowPtr window;
+	//};
 
 	class WindowManager
 	{
 	public:
-		bool AddWindow(const plugins::PluginWindowPtr& window, BakkesMod::Plugin::LoadedPlugin* owner);
-		bool RemoveWindow(const plugins::PluginWindowPtr& window, BakkesMod::Plugin::LoadedPlugin* owner);
-
+		explicit WindowManager(std::vector<RegisteredPlugin>& plugin_list);
+		std::shared_ptr<WindowManagerGUI> gui_window_;
 	private:
-		std::vector<LoadedWindow> loaded_windows_;
+		std::vector<RegisteredPlugin>& plugin_list_;
 	};
 }

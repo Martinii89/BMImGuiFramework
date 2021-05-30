@@ -42,10 +42,11 @@ namespace imgui_framework::details
 
 		bool shouldBlockFurtherInput = false;
 
-		rendering::Renderer* GetRenderer(const std::string& render_id) const;
+		[[nodiscard]] rendering::Renderer* GetRenderer(const std::string& render_id) const;
 
-		void OnPresent(IDXGISwapChain* pSwapChain);
+		// dx hook stuff
 		[[nodiscard]] bool GetWindowDeviceContext(IDXGISwapChain* pSwapChain);
+		void OnPresent(IDXGISwapChain* pSwapChain);
 		LRESULT OnWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	};
 }

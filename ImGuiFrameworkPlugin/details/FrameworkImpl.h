@@ -10,12 +10,13 @@ namespace imgui_framework::details
 	{
 		BakkesMod::Plugin::LoadedPlugin* plugin_ptr;
 		std::function<void()> on_host_unload;
+		std::vector<plugins::PluginWindowPtr> windows;
 	};
 
 	class FrameworkImpl
 	{
 	public:
-		explicit FrameworkImpl(ImGuiFrameworkPlugin* main): p_main(main) {}
+		explicit FrameworkImpl();
 		FrameworkImpl(const FrameworkImpl& other) = delete;
 		FrameworkImpl(FrameworkImpl&& other) noexcept = delete;
 		FrameworkImpl& operator=(const FrameworkImpl& other) = delete;
@@ -33,13 +34,12 @@ namespace imgui_framework::details
 
 		std::shared_ptr<GameWrapper> gw_;
 		std::shared_ptr<CVarManagerWrapper> cv_;
-		std::weak_ptr<ImGuiFrameworkPlugin> weak_main_; // Weak ptr to avoid circular shared/unique references 
+		std::weak_ptr<ImGuiFrameworkPlugin> weak_main_; // Weak ptr to avoid circular shared references 
 
 
 	private:
 		BakkesMod::Plugin::LoadedPlugin* GetLoadedPlugin(BakkesMod::Plugin::BakkesModPlugin* plugin) const;
-		std::vector<RegisteredPlugin> registered_plugins;
-		ImGuiFrameworkPlugin* p_main = nullptr; // back pointer
+		std::vector<RegisteredPlugin> registered_plugins; // never reassign this!
 		DxHook dx_hook_;
 		// not sure about this class. But I should have some store of all added windows somewhere.
 		// dxHook doesn't seem like the right place for it.

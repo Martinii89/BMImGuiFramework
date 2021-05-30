@@ -1,17 +1,37 @@
 ﻿#include "pch.h"
 #include "FrameworkImpl.h"
+
+#include "ImGuiFrameworkPlugin.h"
 #include "bakkesmod/wrappers/PluginManagerWrapper.h"
 
 using namespace imgui_framework::details;
 
+FrameworkImpl::FrameworkImpl(): window_manager_(registered_plugins) {}
+
 void FrameworkImpl::OnLoad()
 {
 	InitKiero();
+	const auto main = weak_main_.lock();
+	const auto me = GetLoadedPlugin(main.get());
+	// Add myself to the list so I also can register windows.
+	registered_plugins.push_back({me, []{}});
+	if (!me)
+	{
+		LOG("Failed to get my own loaded plugin info");
+	}
+	else if (AddWindow(window_manager_.gui_window_, me))
+	{
+		LOG("Registered the window manager");
+	}
+	else
+	{
+		LOG("Failed to register the window manager");
+	}
 }
 
 void FrameworkImpl::OnUnload()
 {
-	for (auto& [plugin_ptr, on_host_unload] : registered_plugins)
+	for (auto& [plugin_ptr, on_host_unload, _] : registered_plugins)
 	{
 		if (on_host_unload)
 		{
@@ -32,7 +52,7 @@ std::unique_ptr<imgui_framework::plugins::PluginHostWrapper> FrameworkImpl::Regi
 	LOG("Registering {}", loaded_plugin->_details->className);
 	auto main = weak_main_.lock();
 	auto host_wrapper = std::make_unique<plugins::PluginHostWrapper>(main, loaded_plugin);
-	registered_plugins.push_back({loaded_plugin, std::move(on_host_unload)});
+	registered_plugins.push_back({loaded_plugin, std::move(on_host_unload), {}});
 	return std::move(host_wrapper);
 }
 
@@ -40,27 +60,61 @@ bool FrameworkImpl::AddWindow(const plugins::PluginWindowPtr& new_window, Bakkes
 {
 	LOG("ImGuiFrameworkPlugin::AddWindow");
 	LOG("Checking interface version");
-	if (new_window->InterfaceVersion() != imgui_framework::plugins::kPluginWindowInterfaceVersion)
+	if (new_window->InterfaceVersion() != plugins::kPluginWindowInterfaceVersion)
 	{
-		LOG("Interface version mismatch (was {}, should be {}", new_window->InterfaceVersion(), imgui_framework::plugins::kPluginWindowInterfaceVersion);
+		LOG("Interface version mismatch (was {}, should be {}", new_window->InterfaceVersion(), plugins::kPluginWindowInterfaceVersion);
 		return false;
 	}
+
+	auto it = std::find_if(registered_plugins.begin(), registered_plugins.end(),
+		[owner](RegisteredPlugin& reg)
+		{
+			return reg.plugin_ptr == owner;
+		});
+	if (it == registered_plugins.end())
+	{
+		LOG("Can't register a window to a unknown plugin");
+		return false;
+	}
+
+
 	auto required_backed = new_window->GetRendererVersion();
 	LOG("Window {} requested backend: {}", new_window->GetWindowName(), required_backed);
 
-	// if dx succeeds and winmng fails. This could go bad..
-	if (dx_hook_.AddWindow(new_window) && window_manager_.AddWindow(new_window, owner))
+	if (dx_hook_.AddWindow(new_window))
 	{
+		it->windows.push_back(new_window);
 		return true;
 	}
+	LOG("Failed to add windows dx_hook_.AddWindow return false");
 	return false;
 }
 
 bool FrameworkImpl::RemoveWindow(const plugins::PluginWindowPtr& window, BakkesMod::Plugin::LoadedPlugin* owner)
 {
-	// if dx succeeds and winmng fails. This could go bad..
-	if (dx_hook_.RemoveWindow(window) && window_manager_.RemoveWindow(window, owner))
+	auto it = std::find_if(registered_plugins.begin(), registered_plugins.end(),
+		[owner](RegisteredPlugin& reg)
+		{
+			return reg.plugin_ptr == owner;
+		});
+	if (it == registered_plugins.end())
 	{
+		LOG("Can't remove a window for a unknown plugin");
+		return false;
+	}
+	auto window_it = std::find_if(it->windows.begin(), it->windows.end(),
+		[window](plugins::PluginWindowPtr& win_ptr)
+		{
+			return win_ptr == window;
+		});
+	if (window_it == it->windows.end())
+	{
+		LOG("Window not in the list for this plugin. Aborting");
+		return false;
+	}
+	if (dx_hook_.RemoveWindow(window))
+	{
+		it->windows.erase(window_it);
 		return true;
 	}
 	LOG("Failed removing the window");
@@ -71,7 +125,7 @@ void FrameworkImpl::UnregisterPlugin(plugins::PluginHostWrapper* host_wrapper)
 {
 	auto host_owner = host_wrapper->GetOwner();
 	auto it = std::find_if(registered_plugins.begin(), registered_plugins.end(),
-		[host_owner](imgui_framework::details::RegisteredPlugin& registered_plugin)
+		[host_owner](RegisteredPlugin& registered_plugin)
 		{
 			return registered_plugin.plugin_ptr == host_owner;
 		});

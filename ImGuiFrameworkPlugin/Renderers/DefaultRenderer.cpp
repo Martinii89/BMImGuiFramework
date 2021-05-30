@@ -122,7 +122,10 @@ void DefaultRenderer::Render(IDXGISwapChain* pSwapChain)
 	// Draw the imgui windows
 	for (auto& window : windows_)
 	{
-		window->Render();
+		if (window->GetIsOpen())
+		{
+			window->Render();
+		}
 	}
 
 	// Check io capture

@@ -32,13 +32,6 @@ void ExamplePlugin::onLoad()
 {
 	_globalCvarManager = cvarManager;
 
-	if (!ModuleAvailable("ImGuiFrameworkPlugin.dll"))
-	{
-		LOG("host not available");
-		return;
-	}
-	LOG("host available");
-
 	if (ValidateHostPluginLoaded())
 	{
 		InitHost();
@@ -62,14 +55,15 @@ void ExamplePlugin::InitHost()
 		return;
 	}
 
-	host_wrapper_ = host_plugin_->RegisterPlugin(this, [this]{FreeHostResources();});
+	host_wrapper_ = host_plugin_->RegisterPlugin(this, [this] { FreeHostResources(); });
 	if (host_wrapper_ && host_wrapper_->HostIsValid())
 	{
 		addon_window_ = std::make_shared<TestWindow>();
 		if (host_wrapper_->AddWindow(addon_window_))
 		{
 			LOG("Added window");
-		}else
+		}
+		else
 		{
 			LOG("Failed to add window");
 		}
@@ -78,6 +72,11 @@ void ExamplePlugin::InitHost()
 
 bool ExamplePlugin::ValidateHostPluginLoaded()
 {
+	if (!ModuleAvailable("ImGuiFrameworkPlugin.dll"))
+	{
+		LOG("host not available");
+		return false;
+	}
 	auto& loaded_plugins = *gameWrapper->GetPluginManager().GetLoadedPlugins();
 	for (auto& loaded_plugin : loaded_plugins)
 	{
@@ -94,9 +93,8 @@ void ExamplePlugin::FreeHostResources()
 {
 	LOG("On host unloader");
 	host_wrapper_.reset();
-	auto TestReturn = __FUnloadDelayLoadedDLL2("ImGuiFrameworkPlugin.dll");
 
-	if (TestReturn)
+	if (__FUnloadDelayLoadedDLL2("ImGuiFrameworkPlugin.dll"))
 		LOG("DLL was unloaded");
 	else
 		LOG("DLL was not unloaded");
