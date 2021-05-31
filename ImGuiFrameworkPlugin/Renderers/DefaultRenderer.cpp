@@ -104,6 +104,7 @@ void DefaultRenderer::Render(IDXGISwapChain* pSwapChain)
 	pSwapChain_ = pSwapChain;
 	if (!initialized_) return;
 
+	bool active_overlay_active = false;
 
 	// Pre render
 	CreateRenderTarget();
@@ -125,11 +126,26 @@ void DefaultRenderer::Render(IDXGISwapChain* pSwapChain)
 		if (window->GetIsOpen())
 		{
 			window->Render();
+			active_overlay_active |= window->GetIsActiveOverlay();
 		}
 	}
 
 	// Check io capture
 	shouldCaptureInput = ImGui::GetIO().WantCaptureMouse || ImGui::GetIO().WantCaptureKeyboard;
+
+	// Check if mouse should be drawn
+	ImGuiIO& io = ImGui::GetIO();
+    io.MouseDrawCursor = active_overlay_active;
+    if (io.MouseDrawCursor)
+    {
+        io.ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+        io.ConfigFlags &= ~ImGuiConfigFlags_NoMouseCursorChange;
+    }
+    else
+    {
+        io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
+        io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+    }
 
 	// Render the imgui windows
 	ImGui::Render();
