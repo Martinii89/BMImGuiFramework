@@ -36,16 +36,15 @@ bool DefaultRenderer::InitRenderer(HWND window, ID3D11Device* device, ID3D11Devi
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	io.DeltaTime = 1.0f / 60.0f;
-	//io.MouseDrawCursor = false;
-	//io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
-	//io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	//io.ConfigViewportsNoDecoration = false;
-	//io.ConfigViewportsNoAutoMerge = true;    
-	//io.ConfigViewportsNoTaskBarIcon = true;  
-	//io.ConfigViewportsNoDecoration;   
-	io.ConfigViewportsNoDefaultParent = true;
+
+	//enable for viewports
+	if constexpr (false)
+	{
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		io.ConfigViewportsNoDefaultParent = true;
+	}
+
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX11_Init(device, context);
 	initialized_ = true;
@@ -119,6 +118,8 @@ void DefaultRenderer::Render(IDXGISwapChain* pSwapChain)
 		windows_add_queue_.erase(it);
 	}
 
+
+	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
 	// Draw the imgui windows
 	for (auto& window : windows_)
