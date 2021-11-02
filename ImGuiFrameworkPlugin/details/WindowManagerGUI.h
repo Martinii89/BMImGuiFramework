@@ -21,7 +21,7 @@ namespace imgui_framework::details
 		void Open() override;
 		void Close() override;
 	private:
-		bool open_ = true;
+		bool open_ = false;
 		std::string menu_name_ = "Window Manager";
 		std::vector<RegisteredPlugin>& registered_plugins_; 
 	};

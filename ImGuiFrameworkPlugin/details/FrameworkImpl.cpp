@@ -22,7 +22,7 @@ void FrameworkImpl::OnLoad()
 	else if (AddWindow(window_manager_.gui_window_, me))
 	{
 		LOG("Registered the window manager");
-		cv_->registerNotifier("imgui_windows", [this](...)
+		cv_->registerNotifier("imgui_framework_window_manager", [this](...)
 		{
 			window_manager_.gui_window_->Open();
 		}, "Open the window manager", 0);
